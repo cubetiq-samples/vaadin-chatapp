@@ -1,0 +1,5 @@
+server:
+  port: ${PORT:8080}
+
+vaadin:
+  whitelisted-packages: com.vaadin,org.vaadin,com.cubetiqs
