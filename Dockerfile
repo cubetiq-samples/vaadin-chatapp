@@ -1,13 +1,15 @@
-FROM ghcr.io/graalvm/jdk:java17-22.3.1 as builder
+FROM cubetiq/graalvm as builder
 
-WORKDIR /app
+RUN echo $PATH
 
+COPY gradlew ./
+COPY gradle/wrapper/ gradle/wrapper/
 COPY build.gradle.kts settings.gradle.kts ./
-RUN ./gradlew --no-daemon --no-build-cache --no-parallel --no-configure-on-demand --offline dependencies
+RUN ./gradlew -x test
 
 COPY . ./
 RUN ./gradlew --no-daemon -x test nativeCompile
 
 FROM scratch
-COPY --from=builder /app/build/native/main /app
+COPY --from=builder /home/cubetiq/build/native-image/application /app
 ENTRYPOINT ["/app"]
